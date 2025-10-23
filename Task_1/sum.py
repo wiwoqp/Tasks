@@ -1,4 +1,4 @@
-def sum(digits):
+def sum_digits(digits):
     cloud = [int(i) for i in digits if i.isdigit()]
 
     total = 0
@@ -9,4 +9,4 @@ def sum(digits):
 
 n = input().split()
 
-print(sum(n))
+print(sum_digits(n))

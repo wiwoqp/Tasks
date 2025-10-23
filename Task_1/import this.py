@@ -17,11 +17,13 @@ Although never is often better than *right* now.
 If the implementation is hard to explain, it's a bad idea.
 If the implementation is easy to explain, it may be a good idea.
 Namespaces are one honking great idea -- let's do more of those! '''
-#  конкатенация
+#  concatenation
+
 gmail = 'ilya.trusovv@gmail.com'
-L += gmail
+L = L.format(gmail)
 print(len(L))
-#  количество согласных
+
+#  sum of vowles
 vowels = "aeiou"
 counter = 0
 for i in L:
@@ -30,7 +32,7 @@ for i in L:
 print(counter)
 print()
 
-#вывод каждой 18-го индекса
+#each 18 symbol
 for i in range(18 ,len(L), 18):
-        print(i, L[i].swapcase(),sep = '')
+    print(i, L[i].swapcase(),sep = '')
 
