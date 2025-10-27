@@ -21,7 +21,7 @@ class Car:
         self.total_major_repair = 0
         self.max_mileage_limit_copy = self.max_mileage_limit
 
-    def __drive(self):
+    def drive(self):
         while self.way > 0:
             while self.for_second_while < self.max_mileage_limit:
                 while self.gas_tank > 0:
@@ -35,17 +35,38 @@ class Car:
                         self.fuel_consumption *= 1.01
                         self.tachograph_each_1000 = 0
                 # Заправка
-                while True:
-                    self.fuel_fill_counter += 1  # количество заправок
-                    self.how_much_spent_fuel += self.gas_tank_copy * self.cost_fuel # сколько тратим
-                    self.gas_tank = self.gas_tank_copy # заливаем бак
-                    break
+                self.fuel_fill_counter += 1  # количество заправок
+                self.how_much_spent_fuel += self.gas_tank_copy * self.cost_fuel # сколько тратим
+                self.gas_tank = self.gas_tank_copy # заливаем бак
+
 
             # Капитальный ремонт
-            while True:
-                self.total_major_repair += self.major_repair
-                break
+            self.total_major_repair += self.major_repair
+            self.for_second_while = 0
 
+    def info(self):
+        return (self.__tachograph,  # Пробег
+                self.price,  # Остаточная стоимость
+                self.how_much_spent_fuel,  # Сколько было потрачено на топливо
+                self.fuel_fill_counter, # Количество заправок
+                self.max_mileage_limit - self.for_second_while,  # сколько пробега осталось до кап ремонта
+                self.total_major_repair) # общая стоимость еап ремонта
+
+
+cars = []
+for i in range(1, 101):
+    car = Car(i)
+    car.drive()
+    cars.append(car)
+
+diesel_cars = [i for i in cars if i.cost_fuel == 1.8]
+petrol_cars = [i for i in cars if i.cost_fuel == 2.4]
+
+diesel_sorted = sorted(diesel_cars, key=lambda c: c.info()[1], reverse=True)
+petrol_sorted = sorted(petrol_cars, key=lambda c: c.info()[4], reverse=True)
+
+# суммарная стоимость автопарка
+total_value = sum(c.info()[1] for c in cars)
 
 
 
