@@ -45,14 +45,14 @@ class Car:
 
     @property
     def info(self):
-        return {
-            "mileage": round(self.__tachograph),
-            "price": self.price,
-            "fuel_spent": self.how_much_spent_fuel,
-            "refuels": self.fuel_fill_counter,
-            "to_repair": self.max_mileage_limit - self.mileage_last_overhaul,
-            "repairs_cost": self.total_major_repair
-        }
+        return (
+            round(self.__tachograph),  # Пробег
+            self.price,  # Остаточная стоимость
+            self.how_much_spent_fuel,  # Сколько потрачено на топливо
+            self.fuel_fill_counter,  # количество заправок
+            self.max_mileage_limit - self.mileage_last_overhaul, # сколько осталось до кап ремонта
+            self.total_major_repair  # общая стоимость кап ремонта
+        )
 
 
 
@@ -68,8 +68,8 @@ for i in range(1, 101):
 diesel_cars = [i for i in cars if i.cost_fuel == 1.8]
 petrol_cars = [i for i in cars if i.cost_fuel == 2.4]
 
-diesel_sorted = sorted(diesel_cars, key=lambda c: c.info["price"], reverse=True)
-petrol_sorted = sorted(petrol_cars, key=lambda c: c.info["to_repair"], reverse=True)
+diesel_sorted = sorted(diesel_cars, key=lambda c: c.info[1], reverse=True)
+petrol_sorted = sorted(petrol_cars, key=lambda c: c.info[4], reverse=True)
 
 
 print(total_price)
