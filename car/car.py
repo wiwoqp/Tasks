@@ -1,18 +1,17 @@
 from random import randint
 
 class Car:
-    def __init__(self, id, fuel_price, gas_tank, fuel_consumption,
-                 major_repair, top_down_price, max_mileage_limit):
+    def __init__(self, id):
         self.id = id
-        self.fuel_price = fuel_price
-        self.gas_tank = gas_tank
-        self.fuel_consumption = fuel_consumption
-        self.major_repair = major_repair
-        self.top_down_price = top_down_price
+        self.fuel_price = 2.4 if self.id % 3 == 0 else 1.8
+        self.gas_tank = 75 if self.id % 5 == 0 else 60
+        self.fuel_consumption = 6 if self.id % 3 == 0 else 8
+        self.major_repair = 700 if self.id % 3 == 0 else 500
+        self.top_down_price = 105 if self.id % 3 == 0 else 95
         self.price = 10_000
         self.route = randint(55_000, 286_000)
-        self.max_mileage_limit = max_mileage_limit
-        self.gas_station = gas_tank
+        self.max_mileage_limit = 150_000 if self.id % 3 == 0 else 100_000
+        self.gas_station = self.gas_tank
 
         self.__tachograph = 0
         self.fuel_fill_counter = 0
@@ -60,15 +59,7 @@ class CarFactory:
 
     def produce(self):
         for i in range(1, 101):
-            fuel_price = 2.4 if i % 3 == 0 else 1.8
-            gas_tank = 75 if i % 5 == 0 else 60
-            fuel_consumption = 6 if i % 3 == 0 else 8
-            major_repair = 700 if i % 3 == 0 else 500
-            top_down_price = 105 if i % 3 == 0 else 95
-            max_mileage_limit = 150_000 if i % 3 == 0 else 100_000
-
-            car = Car(i, fuel_price, gas_tank, fuel_consumption,
-                      major_repair, top_down_price, max_mileage_limit)
+            car = Car(i)
             car.drive()
             self.cars.append(car)
 
