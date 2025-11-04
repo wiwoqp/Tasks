@@ -1,17 +1,18 @@
 from random import randint
 
 class Car:
-    def __init__(self, id):
+    def __init__(self, id, fuel_price, gas_tank, fuel_consumption,
+                 major_repair, top_down_price, max_mileage_limit):
         self.id = id
-        self.fuel_price = 2.4 if self.id % 3 == 0 else 1.8
-        self.gas_tank = 75 if self.id % 5 == 0 else 60
-        self.fuel_consumption = 6 if self.id % 3 == 0 else 8
-        self.major_repair = 700 if self.id % 3 == 0 else 500
-        self.top_down_price = 105 if self.id % 3 == 0 else 95
+        self.fuel_price = fuel_price
+        self.gas_tank = gas_tank
+        self.fuel_consumption = fuel_consumption
+        self.major_repair = major_repair
+        self.top_down_price = top_down_price
         self.price = 10_000
         self.route = randint(55_000, 286_000)
-        self.max_mileage_limit = 150_000 if self.id % 3 == 0 else 100_000
-        self.gas_station = self.gas_tank
+        self.max_mileage_limit = max_mileage_limit
+        self.gas_station = gas_tank
 
         self.__tachograph = 0
         self.fuel_fill_counter = 0
@@ -20,26 +21,40 @@ class Car:
         self.tachograph_each_1000 = 0
         self.total_major_repair = 0
 
-    def drive(self):
-        while self.route > 0:
-            while self.mileage_last_overhaul < self.max_mileage_limit:
-                while self.gas_tank > 0:
-                    self.__tachograph += 100 / self.fuel_consumption
-                    self.tachograph_each_1000 += 100 / self.fuel_consumption
-                    self.gas_tank -= 1
-                    self.route -= 100 / self.fuel_consumption
-                    self.mileage_last_overhaul += 100 / self.fuel_consumption
-                    if self.tachograph_each_1000 >= 1000:
-                        self.price -= self.top_down_price
-                        self.fuel_consumption *= 1.01
-                        self.tachograph_each_1000 = 0
+    def drive(self, miles):
+        while miles > 0:
+            if self.mileage_last_overhaul >= self.max_mileage_limit:
+                self.total_major_repair += self.major_repair
+                self.mileage_last_overhaul = 0
 
+            if self.gas_tank <= 0:
                 self.fuel_fill_counter += 1
                 self.how_much_spent_fuel += self.gas_station * self.fuel_price
                 self.gas_tank = self.gas_station
 
-            self.total_major_repair += self.major_repair
-            self.mileage_last_overhaul = 0
+            step = min(100, miles)
+            fuel_needed = step / self.fuel_consumption
+
+            if self.gas_tank < fuel_needed:
+                # если топлива не хватает на шаг — заправляемся
+                self.fuel_fill_counter += 1
+                self.how_much_spent_fuel += self.gas_station * self.fuel_price
+                self.gas_tank = self.gas_station
+
+            self.__tachograph += step
+            self.tachograph_each_1000 += step
+            self.gas_tank -= fuel_needed
+            self.mileage_last_overhaul += step
+            miles -= step
+
+            if self.tachograph_each_1000 >= 1000:
+                self.price -= self.top_down_price
+                self.fuel_consumption *= 1.01
+                self.tachograph_each_1000 = 0
+
+    def __repr__(self):
+        return (f"<Car id={self.id}, mileage={round(self.__tachograph)}, "
+                f"price={self.price}, fuel_spent={self.how_much_spent_fuel}>")
 
     @property
     def info(self):
@@ -59,8 +74,17 @@ class CarFactory:
 
     def produce(self):
         for i in range(1, 101):
-            car = Car(i)
-            car.drive()
+            fuel_price = 2.4 if i % 3 == 0 else 1.8
+            gas_tank = 75 if i % 5 == 0 else 60
+            fuel_consumption = 6 if i % 3 == 0 else 8
+            major_repair = 700 if i % 3 == 0 else 500
+            top_down_price = 105 if i % 3 == 0 else 95
+            max_mileage_limit = 150_000 if i % 3 == 0 else 100_000
+
+            car = Car(i, fuel_price, gas_tank, fuel_consumption,
+                      major_repair, top_down_price, max_mileage_limit)
+            route = randint(55_000, 286_000)  # маршрут генерируем здесь
+            car.drive(route)
             self.cars.append(car)
 
     def total_price(self):
