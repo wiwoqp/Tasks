@@ -36,7 +36,6 @@ class Car:
             fuel_needed = step / self.fuel_consumption
 
             if self.gas_tank < fuel_needed:
-                # если топлива не хватает на шаг — заправляемся
                 self.fuel_fill_counter += 1
                 self.how_much_spent_fuel += self.gas_station * self.fuel_price
                 self.gas_tank = self.gas_station
@@ -83,7 +82,7 @@ class CarFactory:
 
             car = Car(i, fuel_price, gas_tank, fuel_consumption,
                       major_repair, top_down_price, max_mileage_limit)
-            route = randint(55_000, 286_000)  # маршрут генерируем здесь
+            route = randint(55_000, 286_000)
             car.drive(route)
             self.cars.append(car)
 
@@ -100,3 +99,4 @@ diesel_sorted = sorted(diesel_cars, key=lambda c: c.info[1], reverse=True)
 petrol_sorted = sorted(petrol_cars, key=lambda c: c.info[4], reverse=True)
 
 print(factory.total_price())
+print(factory.cars[0])
