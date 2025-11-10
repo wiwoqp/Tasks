@@ -22,7 +22,6 @@ class Car:
             self.top_down_price = 95
             self.max_mileage_limit = 100_000
 
-        # счётчики
         self.__tachograph = 0
         self.fuel_fill_counter = 0
         self.how_much_spent_fuel = 0
